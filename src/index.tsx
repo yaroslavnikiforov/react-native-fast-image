@@ -50,6 +50,7 @@ export type Source = {
     headers?: { [key: string]: string }
     priority?: Priority
     cache?: Cache
+    blurRadius?: number,
 }
 
 export interface OnLoadEvent {
@@ -128,12 +129,17 @@ export interface FastImageProps extends AccessibilityProps, ViewProps {
      * Render children within the image.
      */
     children?: React.ReactNode
+
+    /**
+     * The blur radius of the blur filter added to the image.
+     */
+    blurRadius?: number
 }
 
 const resolveDefaultSource = (
     defaultSource?: ImageRequireSource,
 ): string | number | null => {
-    if (!defaultSource) {
+    if (defaultSource!) {
         return null
     }
     if (Platform.OS === 'android') {
@@ -157,6 +163,7 @@ function FastImageBase({
     source,
     defaultSource,
     tintColor,
+    blurRadius,
     onLoadStart,
     onProgress,
     onLoad,
@@ -188,6 +195,7 @@ function FastImageBase({
                     onError={onError}
                     onLoadEnd={onLoadEnd}
                     resizeMode={resizeMode}
+                    blurRadius={blurRadius}
                 />
                 {children}
             </View>
@@ -197,13 +205,17 @@ function FastImageBase({
     const resolvedSource = Image.resolveAssetSource(source as any)
     const resolvedDefaultSource = resolveDefaultSource(defaultSource)
 
+    const resultSource = Platform.OS === 'android'
+        ? Object.assign({}, resolvedSource, { blurRadius: blurRadius })
+        : resolvedSource
+
     return (
         <View style={[styles.imageContainer, style]} ref={forwardedRef}>
             <FastImageView
                 {...props}
                 tintColor={tintColor}
                 style={StyleSheet.absoluteFill}
-                source={resolvedSource}
+                source={resultSource}
                 defaultSource={resolvedDefaultSource}
                 onFastImageLoadStart={onLoadStart}
                 onFastImageProgress={onProgress}
@@ -211,6 +223,7 @@ function FastImageBase({
                 onFastImageError={onError}
                 onFastImageLoadEnd={onLoadEnd}
                 resizeMode={resizeMode}
+                blurRadius={blurRadius}
             />
             {children}
         </View>
@@ -231,6 +244,7 @@ export interface FastImageStaticProperties {
     resizeMode: typeof resizeMode
     priority: typeof priority
     cacheControl: typeof cacheControl
+    blurRadius: number,
     preload: (sources: Source[]) => void
     clearMemoryCache: () => Promise<void>
     clearDiskCache: () => Promise<void>
