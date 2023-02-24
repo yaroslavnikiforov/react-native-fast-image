@@ -28,13 +28,12 @@
         "ios",
         "!ios/build",
         "dist",
-        "RNFastImage.podspec",
-        "src"
+        "src",
+        "RNFastImage.podspec"
     ],
     "scripts": {
         "prepare": "npm run build",
-        "build": "tsc && rimraf src",
-        "test": "tsc",
+        "build": "rimraf dist && tsc",
         "lint": "eslint src"
     },
     "devDependencies": {

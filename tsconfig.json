@@ -4,6 +4,7 @@
     "jsx": "react-native",
     "moduleResolution": "node",
     "lib": ["es2017"],
+    "outDir": "./dist",
     "noImplicitAny": false,
     "noImplicitThis": false,
     "allowJs": true,
@@ -13,9 +14,6 @@
     "isolatedModules": true,
     "strict": true,
     "skipLibCheck": true,
-    "declarationDir": "./dist",
-    "outDir": "./dist",
-    "rootDir": "./src"
   },
-  "include": ["./src"]
+  "include": ["src"]
 }
