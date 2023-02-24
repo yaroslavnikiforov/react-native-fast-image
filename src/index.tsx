@@ -138,8 +138,8 @@ export interface FastImageProps extends AccessibilityProps, ViewProps {
 
 const resolveDefaultSource = (
     defaultSource?: ImageRequireSource,
-): string | number | null => {
-    if (defaultSource!) {
+): string | number | null | undefined => {
+    if (!defaultSource) {
         return null
     }
     if (Platform.OS === 'android') {
@@ -148,11 +148,7 @@ const resolveDefaultSource = (
             defaultSource as ImageRequireSource,
         )
 
-        if (resolved) {
-            return resolved.uri
-        }
-
-        return null
+        return resolved?.uri
     }
     // iOS or other number mapped assets
     // In iOS the number is passed, and bridged automatically into a UIImage
