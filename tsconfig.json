@@ -1,23 +1,23 @@
 {
   "compilerOptions": {
     "jsx": "react",
-    "baseUrl": ".",
-    "outDir": "./dist",                                  /* Specify an output folder for all emitted files. */
-    "target": "esnext",                                  /* Set the JavaScript language version for emitted JavaScript and include compatible library declarations. */
-    "module": "esnext",                                  /* Specify what module code is generated. */
+    "target": "esnext",
     "lib": ["esnext"],
-    "removeComments": true,                              /* Disable emitting comments. */
-    "esModuleInterop": true,                             /* Emit additional JavaScript to ease support for importing CommonJS modules. This enables 'allowSyntheticDefaultImports' for type compatibility. */
-    "forceConsistentCasingInFileNames": true,            /* Ensure that casing is correct in imports. */
-    "strict": true,                                      /* Enable all strict type-checking options. */
+    "module": "esnext",
+    "moduleResolution": "node",
+    "noFallthroughCasesInSwitch": true,
+    "noImplicitReturns": true,
+    "noImplicitUseStrict": false,
+    "noStrictGenericChecks": false,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "resolveJsonModule": true,
     "skipLibCheck": true,
-    "declaration": true,
-    "allowJs": true,
-    "allowSyntheticDefaultImports": true,
-    "noImplicitAny": false,
-    "noImplicitThis": false,
-    "isolatedModules": true,
-    "alwaysStrict": true,
+    "strict": true,
+    "allowUnreachableCode": false,
+    "allowUnusedLabels": false,
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
   },
   "include": ["src"]
 }
