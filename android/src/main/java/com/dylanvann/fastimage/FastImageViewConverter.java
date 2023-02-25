@@ -32,7 +32,7 @@ import jp.wasabeef.glide.transformations.BlurTransformation;
 
 class FastImageViewConverter {
     private static final Drawable TRANSPARENT_DRAWABLE = new ColorDrawable(Color.TRANSPARENT);
-    private static final int BLUR_SAMPLING = 0;
+    private static final int BLUR_SAMPLING = 5;
 
     private static final Map<String, FastImageCacheControl> FAST_IMAGE_CACHE_CONTROL_MAP =
             new HashMap<String, FastImageCacheControl>() {{
