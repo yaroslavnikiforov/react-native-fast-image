@@ -1,6 +1,7 @@
 #import "FFFastImageView.h"
 #import <SDWebImage/UIImage+MultiFormat.h>
 #import <SDWebImage/UIView+WebCache.h>
+#import <CoreImage/CoreImage.h>
 
 @interface FFFastImageView ()
 
@@ -89,6 +90,13 @@
 }
 
 - (void) setImage: (UIImage*)image {
+    if (_blurRadius && _blurRadius > 0) {
+        UIImage *blurImage = [self blurImage: image withRadius: _blurRadius];
+        if (blurImage) {
+            image = blurImage;
+        }
+    }
+
     if (self.imageColor != nil) {
         super.image = [self makeImage: image withTint: self.imageColor];
     } else {
@@ -167,11 +175,8 @@
             }
             return [mutableRequest copy];
         }];
-        SDWebImageMutableContext* context = [NSMutableDictionary dictionaryWithDictionary:@{SDWebImageContextDownloadRequestModifier : requestModifier}];
-
-        if (_blurRadius > 0) {
-            [context setValue:[SDImageBlurTransformer transformerWithRadius:_blurRadius] forKey:SDWebImageContextImageTransformer];
-        }
+        
+        SDWebImageContext* context = @{SDWebImageContextDownloadRequestModifier: requestModifier};
 
         // Set priority.
         SDWebImageOptions options = SDWebImageRetryFailed | SDWebImageHandleCookies;
@@ -246,6 +251,30 @@
                     }
                 }
             }];
+}
+
+- (UIImage *)blurImage:(UIImage *)image withRadius:(CGFloat)radius {
+    CIContext *context = [CIContext contextWithOptions:nil];
+    CIImage *inputImage = [CIImage imageWithCGImage:image.CGImage];
+
+    // Creating gaussian blur filter
+    CIFilter *filter = [CIFilter filterWithName:@"CIGaussianBlur"];
+    [filter setValue:inputImage forKey:kCIInputImageKey];
+    [filter setValue:[NSNumber numberWithFloat:radius] forKey:kCIInputRadiusKey];
+    CIImage *outputImage = [filter valueForKey:kCIOutputImageKey];
+
+    if (outputImage) {
+        CGRect rect = CGRectMake(radius * 2, radius * 2, image.size.width - radius * 4, image.size.height - radius * 4);
+        CGImageRef outputImageRef = [context createCGImage:outputImage fromRect:rect];
+
+        if (outputImageRef) {
+            UIImage *blurImage = [UIImage imageWithCGImage:outputImageRef];
+            CGImageRelease(outputImageRef);
+            return blurImage;
+        }
+    }
+
+    return nil;
 }
 
 - (void) dealloc {
