@@ -25,14 +25,11 @@ import java.util.Map;
 
 import javax.annotation.Nullable;
 
-import static com.bumptech.glide.request.RequestOptions.bitmapTransform;
-import static com.bumptech.glide.request.RequestOptions.signatureOf;
-
 import jp.wasabeef.glide.transformations.BlurTransformation;
 
 class FastImageViewConverter {
     private static final Drawable TRANSPARENT_DRAWABLE = new ColorDrawable(Color.TRANSPARENT);
-    private static final int BLUR_SAMPLING = 5;
+    private static final int BLUR_SAMPLING = 1;
 
     private static final Map<String, FastImageCacheControl> FAST_IMAGE_CACHE_CONTROL_MAP =
             new HashMap<String, FastImageCacheControl>() {{
@@ -88,10 +85,9 @@ class FastImageViewConverter {
     static RequestOptions getOptions(Context context, FastImageSource imageSource, ReadableMap source) {
         // Get priority.
         final Priority priority = FastImageViewConverter.getPriority(source);
+
         // Get cache control method.
         final FastImageCacheControl cacheControl = FastImageViewConverter.getCacheControl(source);
-
-        final int blurRadius = (int)FastImageViewConverter.getBlurRadius(source);
 
         DiskCacheStrategy diskCacheStrategy = DiskCacheStrategy.AUTOMATIC;
         boolean onlyFromCache = false;
@@ -109,6 +105,9 @@ class FastImageViewConverter {
                 // Use defaults.
                 break;
         }
+
+        // Get blur.
+        final int blurRadius = (int)FastImageViewConverter.getBlurRadius(source);
 
         RequestOptions options = new RequestOptions()
                 .diskCacheStrategy(diskCacheStrategy)
